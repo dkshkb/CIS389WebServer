@@ -188,7 +188,7 @@ public class RequestProcessor implements Runnable {
 
             // Construct the message body of a post request
             String body = new StringBuilder("<HTML>\r\n")
-                    .append("<HEAD><TITLE>File Not Found</TITLE>\r\n")
+                    .append("<HEAD><TITLE>Handling Post Request</TITLE>\r\n")
                     .append("</HEAD>\r\n")
                     .append("<BODY>")
                     .append("<H1>Hello! " + entityMap.get("name") + " from " + entityMap.get("city") + "</H1>\r\n")
@@ -210,7 +210,10 @@ public class RequestProcessor implements Runnable {
             out.flush();
           }
 
-        } else { // If server doesn't support POST request from this file
+        }
+
+
+        else { // If server doesn't support POST request from this file
 
           // I still wan to show the POST request I received at the server side
           String body = new StringBuilder("<HTML>\r\n")
