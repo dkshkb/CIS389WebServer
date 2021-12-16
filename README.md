@@ -76,5 +76,6 @@ It will automatically navigate to `http://localhost:888/index_L.html`
 There are two users available  
 - Username: admin  Password: 123456
 - Username: example Password: 123456   
+
 You will see the difference UI for normal user and administrator   
 Administrators can see all the available users and passwords   
