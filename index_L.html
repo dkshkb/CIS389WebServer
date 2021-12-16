@@ -68,11 +68,13 @@
     </style>
     <script>
         function validate() {
-            const USERNAME = "admin";
-            const PASSWORD = "123456";
+            let users = new Map([
+                ["admin", "123456"],
+                ["example", "123456"]
+            ]);
             var username = document.getElementById("username").value;
             var password = document.getElementById("password").value;
-            if (username == USERNAME && password == PASSWORD) {
+            if (users.has(username) && users.get(username) == password) {
                 return true;
             } else {
                 alert("Username or password incorrect!");

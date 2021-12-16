@@ -13,6 +13,8 @@ public class RequestProcessor implements Runnable {
   private String indexFileName = "index.html";
   private Socket connection;
 
+  private Map<String, String> users = new HashMap<>();
+
   public RequestProcessor(File rootDirectory,
                           String indexFileName, Socket connection) {
 
@@ -28,6 +30,9 @@ public class RequestProcessor implements Runnable {
 
     if (indexFileName != null) this.indexFileName = indexFileName;
     this.connection = connection;
+
+    users.put("admin", "123456");
+    users.put("example", "123456");
   }
 
   @Override
@@ -209,6 +214,110 @@ public class RequestProcessor implements Runnable {
             out.write(body);
             out.flush();
           }
+
+        }
+
+        else if (fileName.equals("/index_L.html")){
+
+
+          Boolean isAdmin = entityMap.get("username").equals("admin");
+
+          String allUsersTrTdInTableString;
+          StringBuilder stringBuilder = new StringBuilder();
+          stringBuilder.append("<table>\n" +
+                  "            <div class=\"table-title\">All Users</div>\n" +
+                  "            <tr>\n" +
+                  "                <th>Username</th>\n" +
+                  "                <th>Password</th>\n" +
+                  "            </tr>");
+          users.forEach((username, password) -> stringBuilder.append("<tr>\n" +
+                  "                <td>" + username + "</td>\n" +
+                  "                <td>" + password + "</td>\n" +
+                  "            </tr>"));
+          stringBuilder.append("</table>");
+          allUsersTrTdInTableString = stringBuilder.toString();
+
+          String body = new StringBuilder("<!DOCTYPE html>")
+                  .append("<!DOCTYPE html>\n" +
+                          "<html lang=\"en\">\n" +
+                          "<head>\n" +
+                          "    <meta charset=\"UTF-8\">\n" +
+                          "    <title>Title</title>\n" +
+                          "    <style>\n" +
+                          "        *,\n" +
+                          "        *::before,\n" +
+                          "        *::after {\n" +
+                          "            box-sizing: border-box;\n" +
+                          "            margin: 0;\n" +
+                          "            padding: 0;\n" +
+                          "        }\n" +
+                          "\n" +
+                          "        * {\n" +
+                          "            font-family: Arial, sans-serif;\n" +
+                          "        }\n" +
+                          "\n" +
+                          "        .main {\n" +
+                          "            width: 100vw;\n" +
+                          "            height: 100vh;\n" +
+                          "            display: flex;\n" +
+                          "            flex-direction: column;\n" +
+                          "            align-items: center;\n" +
+                          "            justify-content: center;\n" +
+                          "        }\n" +
+                          "\n" +
+                          "        .headline h1 {\n" +
+                          "            text-align: center;\n" +
+                          "            font-size: 80px;\n" +
+                          "            background-image: linear-gradient(110deg, #f36570, #c61be0, #7703f1);\n" +
+                          "            -webkit-background-clip: text;\n" +
+                          "            -webkit-text-fill-color: transparent;\n" +
+                          "        }\n" +
+                          "\n" +
+                          "        .content {\n" +
+                          "            margin-top: 80px;\n" +
+                          "        }\n" +
+                          "\n" +
+                          "        .content table {\n" +
+                          "            min-width: 480px;\n" +
+                          "            font-size: 18px;\n" +
+                          "            border-collapse: collapse;\n" +
+                          "        }\n" +
+                          "\n" +
+                          "        .content .table-title {\n" +
+                          "            margin-bottom: 10px;\n" +
+                          "            font-size: 24px;\n" +
+                          "        }\n" +
+                          "\n" +
+                          "        .content table td,th {\n" +
+                          "            border: 1px solid #dddddd;\n" +
+                          "            text-align: left;\n" +
+                          "            padding: 10px;\n" +
+                          "        }\n" +
+                          "\n" +
+                          "        .content .content-paragraph {\n" +
+                          "            font-size: 20px;\n" +
+                          "        }\n" +
+                          "\n" +
+                          "\n" +
+                          "    </style>\n" +
+                          "</head>\n" +
+                          "<body>\n" +
+                          "<div class=\"main\">\n" +
+                          "    <div class=\"headline\">\n" +
+                          "        <h1>Welcome, " + entityMap.get("username") + "</h1>\n" +
+                          "    </div>\n" +
+                          "    <div class=\"content\">")
+                  .append(isAdmin ? allUsersTrTdInTableString : "<div class=\"content-paragraph\">You have logged in as a normal user.</div>")
+                  .append("</div>\n" +
+                          "</div>\n" +
+                          "</body>\n" +
+                          "</html>").toString();
+
+          if (version.startsWith("HTTP/")) { // send a MIME header
+            sendHeader(out, "HTTP/1.0 200 OK", "text/html; charset=utf-8", body.length());
+          }
+          out.write(body);
+          out.flush();
 
         }
 
