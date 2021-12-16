@@ -1,6 +1,8 @@
 # CIS389WebServer
-CSE389 Final Project
-Java HTTP(Web) Server
+CSE389 Final Project  
+Java HTTP(Web) Server    
+Demo Video: https://youtu.be/-UDZoPBjX24   
+(If you are not clear about anything in README, please watch the demo video)  
 
 ## README Author
 - Yuhao Chen 
